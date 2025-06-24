@@ -1,0 +1,209 @@
+load_file("nrngui.hoc")
+load_file("DRG.hoc")
+load_file("Glu.hoc")
+load_file("GABAinterneuron.hoc")
+load_file("cholinergic_neuron.hoc")
+
+objref chol, gabai, glu, drg
+chol = new cholinergic_neuron()
+gabai = new GABAinterneuron()
+glu = new Glu()
+drg= new DRG()
+
+//------------------------------Plotting the graphs---------------------------------
+
+objectvar g[20]		
+ngraph = 0
+proc addgraph() { local ii	
+  			
+  ngraph = ngraph + 1
+  ii = ngraph -1
+  g[ii] = new Graph()		
+  g[ii].size (0, tstop, -90, 40)
+  g[ii].xaxis()
+  g[ii].yaxis()
+  g[ii].addvar($s1,$2,$3)
+  
+  g[ii].save_name("graphList[0].")	
+  graphList[0].append(g[ii])
+  
+    
+}
+
+if(ismenu==0) {
+  nrnmainmenu()         
+  nrncontrolmenu()      
+  ismenu=1
+}
+
+
+//------------------------------RECEPTORS-----------------------------------------------
+
+
+access gabai.soma
+access gabai.dend
+access glu.axon
+access chol.soma
+access drg.axon
+
+objref stim
+chol.soma stim = new IClamp(0.5)
+stim.amp = 10
+stim.del = 1
+stim.dur = 5
+
+//RECEPRTORS ON GABAI
+//GABAA
+objectvar grec1[10]
+for r = 0,9{
+  grec1[r] = new GABAA()
+  gabai.soma grec1[r].loc(0.5)		
+  setpointer grec1[r].C, gabai.soma.T_rel
+}
+
+objectvar grec2[150]
+for r = 0,149{
+  grec2[r] = new AMPA()
+  gabai.dend[15] grec2[r].loc(0.9)		
+  setpointer grec2[r].C, glu.axon.T_rel		
+}
+
+objectvar grec3[150]				
+for r = 0,149{
+  grec3[r] = new AMPA()
+  gabai.dend[8] grec3[r].loc(0.5)
+  setpointer grec3[r].C, drg.axon.T_rel
+}
+
+objectvar grec4[30]		
+for r = 0,29{
+  grec4[r] = new NMDA()
+  gabai.dend[3] grec4[r].loc(0.5)			
+  setpointer grec4[r].C, glu.axon.T_rel
+}
+
+objectvar grec5[30]		
+for r = 0,29{
+  grec5[r] = new NMDA()
+  gabai.dend[6] grec5[r].loc(0.5)			
+  setpointer grec5[r].C, drg.axon.T_rel
+}
+
+//RECEPRTORS ON Glu
+objectvar grec6[500]
+for r = 0,499{
+  grec6[r] = new a7()
+  glu.axon[2] grec6[r].loc(0.5)			//not studied, majorly presyn?
+  setpointer grec6[r].C, chol.soma.T_rel
+}
+
+objectvar grec7[100]
+for r = 0,99{
+  grec7[r] = new GABAA()
+  glu.axon[1] grec7[r].loc(0.5)		
+  setpointer grec7[r].C, gabai.soma.T_rel		
+}
+
+objectvar grec8[100]
+for r = 0,99{
+  grec8[r] = new AMPA()
+  glu.axon[3] grec8[r].loc(0.5)		
+  setpointer grec8[r].C, drg.axon.T_rel		
+}
+
+objectvar grec9[10]
+for r = 0,9{
+  grec9[r] = new NMDA()
+  glu.axon[6] grec9[r].loc(0.5)		
+  setpointer grec9[r].C, drg.axon.T_rel		
+}
+
+//RECEPRTORS ON DRG
+objectvar grec10[1000]
+for r = 0,999{
+  grec10[r] = new a3b4()
+  drg.axon[2] grec10[r].loc(0.5)			//not studied, majorly presyn?
+  setpointer grec10[r].C, chol.soma.T_rel
+}
+
+objectvar grec11[1000]
+for r = 0,999{
+  grec11[r] = new a4b2()
+  drg.axon[4] grec11[r].loc(0.5)			//not studied, majorly presyn?
+  setpointer grec11[r].C, chol.soma.T_rel
+}
+
+objectvar grec12[10]
+for r = 0,9{
+  grec12[r] = new GABAA()
+  drg.axon[1] grec12[r].loc(0.5)		
+  setpointer grec12[r].C, gabai.soma.T_rel		
+}
+
+objectvar grec13[100]
+for r = 0,99{
+  grec13[r] = new AMPA()
+  drg.axon[3] grec13[r].loc(0.5)		
+  setpointer grec13[r].C, glu.axon.T_rel		
+}
+
+objectvar grec14[100]
+for r = 0,99{
+  grec14[r] = new NMDA()
+  drg.axon[6] grec14[r].loc(0.5)		
+  setpointer grec14[r].C, glu.axon.T_rel		
+}
+
+
+//-----------------------------GENERAL PARAMETERS--------------------------------------------
+
+dt=0.025
+tstop = 200
+v_init = -65
+celsius = 37
+
+//-----------------------------ADD GRAPHS--------------------------------------------------
+
+//GABA fsi
+
+//Ca check- soma bc rel, nachrs
+
+addgraph("gabai.soma.ica", 2, 1)		
+g[0].addvar("glu.axon[3].ica", 3, 1)		
+g[0].addvar("drg.axon[4].ica", 4, 1)
+
+addgraph("gabai.soma.ina", 2, 1)		
+g[1].addvar("glu.axon[3].ina", 3, 1)		
+g[1].addvar("drg.axon[4].ina", 4, 1)
+
+addgraph("gabai.soma.ik", 2, 1)		
+g[2].addvar("glu.axon[3].ik", 3, 1)		
+g[2].addvar("drg.axon[4].ik", 4, 1)				
+
+/*
+//Transmitter released
+addgraph("chol.soma.T_rel", 2, 1)
+//g[0].addvar("chol.soma.cai", 3, 1)
+addgraph("gabafsi.soma.T_rel", 3, 1)
+//g[0].addvar("gabafsi.soma.cai", 4, 1)
+addgraph("gabanfsi.soma.T_rel", 4, 1)
+//g[2].addvar("gabafsi.soma.cai", 5, 1)
+addgraph("pyrcell.soma.T_rel", 5, 1)
+//g[3].addvar("pyrcell.soma.cai", 6, 1)
+
+// Membrane potential 
+addgraph("gabai.soma.v(0.5)", 2, 1)
+g[0].addvar("glu.axon.v(0.5)", 3, 1)
+g[0].addvar("drg.axon.v(0.5)", 4, 1)
+
+addgraph("gabanfsi.soma.v(0.5)", 2, 1)
+g[1].addvar("gabanfsi.dend.v(0.5)", 3, 1)
+g[1].addvar("gabanfsi.axon.v(0.5)", 4, 1)
+
+addgraph("chol.soma.v(0.5)", 2, 1)
+
+addgraph("pyrcell.soma.v(0.5)", 2, 1)
+//g[3].addvar("pyrcell.dend.v(0.5)", 3, 1)
+//g[3].addvar("pyrcell.axon.v(0.5)", 4, 1)
+
+*/

@@ -1,0 +1,245 @@
+begintemplate Glu
+public init, topol, basic_shape, subsets, geom, biophys, geom_nseg, biophys_inhomo
+public synlist, x, y, z, position, connect2target
+
+public axon
+public all, axonal
+
+objref synlist
+
+proc init() {
+  topol()
+  subsets()
+  geom()
+  biophys()
+  geom_nseg()
+}
+
+create axon[7]
+
+proc topol() { local i
+  for i = 1, 2 connect axon[i](0), axon[i-1](1)
+  connect axon[3](0), axon[1](1)
+  connect axon[4](0), axon(1)
+  for i = 5, 6 connect axon[i](0), axon[4](1)
+  basic_shape()
+}
+proc shape3d_1() {
+  axon {pt3dclear()
+	pt3dadd(0, 0, 0, 0.8)
+	pt3dadd(-0.19, -0.01, 0.37, 0.8)
+	pt3dadd(-0.34, 0.33, 0.33, 0.8)
+	pt3dadd(-0.39, 0.71, 0.21, 0.8)
+	pt3dadd(-0.37, 1.06, 0.08, 0.8)
+	pt3dadd(-0.34, 1.38, -0.03, 0.8)
+	pt3dadd(-0.27, 1.65, -0.17, 0.8)
+	pt3dadd(-0.22, 1.75, -0.26, 0.8)
+  }
+  axon[1] {pt3dclear()
+	pt3dadd(-0.22, 1.75, -0.26, 0.8)
+	pt3dadd(-0.08, 0.85, -0.04, 0.8)
+  }
+  axon[2] {pt3dclear()
+	pt3dadd(-0.08, 0.85, -0.04, 0.8)
+	pt3dadd(-0.02, -0.15, 0.23, 0.8)
+	pt3dadd(-0.5, -0.38, 0.51, 0.8)
+	pt3dadd(-0.91, -0.19, 0.56, 0.8)
+	pt3dadd(-1.14, 0.23, 0.45, 0.8)
+	pt3dadd(-1.26, 0.74, 0.27, 0.8)
+	pt3dadd(-1.38, 1.25, 0.11, 0.8)
+	pt3dadd(-1.71, 1.67, 0, 0.8)
+	pt3dadd(-2.29, 1.93, 0, 0.8)
+	pt3dadd(-3.03, 2.06, 0.02, 0.8)
+	pt3dadd(-3.84, 2.15, 0.06, 0.8)
+	pt3dadd(-4.65, 2.23, 0.12, 0.8)
+	pt3dadd(-5.44, 2.26, 0.2, 0.8)
+	pt3dadd(-6.2, 2.32, 0.28, 0.8)
+	pt3dadd(-6.94, 2.38, 0.39, 0.8)
+	pt3dadd(-7.64, 2.41, 0.55, 0.8)
+	pt3dadd(-8.34, 2.42, 0.69, 0.8)
+	pt3dadd(-9.08, 2.44, 0.76, 0.8)
+	pt3dadd(-9.86, 2.47, 0.83, 0.8)
+	pt3dadd(-10.68, 2.52, 0.86, 0.8)
+	pt3dadd(-11.52, 2.57, 0.81, 0.8)
+	pt3dadd(-12.38, 2.64, 0.69, 0.8)
+	pt3dadd(-13.23, 2.7, 0.5, 0.8)
+	pt3dadd(-14.08, 2.79, 0.32, 0.8)
+	pt3dadd(-14.91, 2.9, 0.15, 0.8)
+	pt3dadd(-15.71, 3.04, 0.02, 0.8)
+	pt3dadd(-16.49, 3.17, -0.13, 0.8)
+	pt3dadd(-17.25, 3.3, -0.25, 0.8)
+	pt3dadd(-18, 3.43, -0.36, 0.8)
+	pt3dadd(-18.73, 3.5, -0.47, 0.8)
+	pt3dadd(-19.44, 3.5, -0.65, 0.8)
+	pt3dadd(-20.16, 3.48, -0.85, 0.8)
+	pt3dadd(-20.92, 3.47, -1.03, 0.8)
+	pt3dadd(-21.75, 3.47, -1.15, 0.8)
+	pt3dadd(-22.6, 3.5, -1.21, 0.8)
+	pt3dadd(-23.5, 3.64, -1.25, 0.8)
+	pt3dadd(-24.41, 3.79, -1.27, 0.8)
+	pt3dadd(-25.3, 3.95, -1.29, 0.8)
+	pt3dadd(-26.16, 4.12, -1.33, 0.8)
+	pt3dadd(-26.98, 4.26, -1.36, 0.8)
+	pt3dadd(-27.76, 4.41, -1.37, 0.8)
+	pt3dadd(-28.51, 4.52, -1.29, 0.8)
+	pt3dadd(-29.22, 4.63, -1.12, 0.8)
+	pt3dadd(-29.91, 4.77, -0.94, 0.8)
+  }
+  axon[3] {pt3dclear()
+	pt3dadd(-0.08, 0.85, -0.04, 0.8)
+	pt3dadd(0.36, 1.91, -0.04, 0.8)
+	pt3dadd(0.65, 1.99, 0.26, 0.8)
+	pt3dadd(0.8, 2.12, 0.58, 0.8)
+	pt3dadd(0.96, 2.26, 0.87, 0.8)
+	pt3dadd(1.11, 2.41, 1.19, 0.8)
+	pt3dadd(1.19, 2.59, 1.52, 0.8)
+	pt3dadd(1.15, 2.8, 1.84, 0.8)
+	pt3dadd(0.89, 2.98, 2.06, 0.8)
+	pt3dadd(0.49, 3.13, 2.17, 0.8)
+	pt3dadd(0.02, 3.29, 2.31, 0.8)
+	pt3dadd(-0.48, 3.45, 2.51, 0.8)
+	pt3dadd(-1.06, 3.62, 2.69, 0.8)
+	pt3dadd(-1.75, 3.76, 2.77, 0.8)
+	pt3dadd(-2.48, 3.94, 2.83, 0.8)
+	pt3dadd(-3.21, 4.17, 2.82, 0.8)
+	pt3dadd(-3.91, 4.41, 2.78, 0.8)
+	pt3dadd(-4.58, 4.64, 2.8, 0.8)
+	pt3dadd(-5.19, 4.87, 2.87, 0.8)
+	pt3dadd(-5.74, 5.08, 2.99, 0.8)
+	pt3dadd(-6.25, 5.22, 3.18, 0.8)
+	pt3dadd(-6.73, 5.34, 3.42, 0.8)
+	pt3dadd(-7.21, 5.44, 3.64, 0.8)
+	pt3dadd(-7.76, 5.52, 3.84, 0.8)
+	pt3dadd(-8.36, 5.58, 4.02, 0.8)
+	pt3dadd(-9.04, 5.66, 4.14, 0.8)
+	pt3dadd(-9.81, 5.78, 4.14, 0.8)
+	pt3dadd(-10.63, 5.94, 4.08, 0.8)
+	pt3dadd(-11.48, 6.12, 3.99, 0.8)
+	pt3dadd(-12.34, 6.29, 3.91, 0.8)
+	pt3dadd(-13.21, 6.46, 3.81, 0.8)
+	pt3dadd(-14.06, 6.61, 3.72, 0.8)
+	pt3dadd(-14.9, 6.78, 3.64, 0.8)
+	pt3dadd(-15.73, 6.97, 3.58, 0.8)
+  }
+  axon[4] {pt3dclear()
+	pt3dadd(-0.22, 1.75, -0.26, 0.8)
+	pt3dadd(-0.16, 1.85, -0.35, 0.8)
+	pt3dadd(-0.02, 2.02, -0.54, 0.8)
+	pt3dadd(0.05, 2.21, -0.73, 0.8)
+	pt3dadd(0.14, 2.43, -0.85, 0.8)
+	pt3dadd(0.2, 2.66, -0.92, 0.8)
+	pt3dadd(0.28, 2.9, -0.96, 0.8)
+	pt3dadd(0.37, 3.13, -0.96, 0.8)
+	pt3dadd(0.48, 3.35, -0.96, 0.8)
+	pt3dadd(0.6, 3.58, -0.96, 0.8)
+	pt3dadd(0.74, 3.83, -0.97, 0.8)
+	pt3dadd(0.89, 4.11, -0.99, 0.8)
+	pt3dadd(0.99, 4.42, -1.02, 0.8)
+	pt3dadd(1.06, 4.74, -1.08, 0.8)
+	pt3dadd(1.08, 5.08, -1.14, 0.8)
+	pt3dadd(1.1, 5.42, -1.17, 0.8)
+	pt3dadd(1.13, 5.8, -1.19, 0.8)
+	pt3dadd(1.13, 6.22, -1.16, 0.8)
+	pt3dadd(1, 6.6, -1.08, 0.8)
+	pt3dadd(0.85, 6.75, -1.03, 0.8)
+  }
+  axon[5] {pt3dclear()
+	pt3dadd(0.85, 6.75, -1.03, 0.8)
+	pt3dadd(0.71, 6.89, -0.97, 0.8)
+	pt3dadd(0.78, 7.06, -0.95, 0.8)
+	pt3dadd(0.75, 7.34, -0.96, 0.8)
+	pt3dadd(0.73, 7.7, -1, 0.8)
+	pt3dadd(0.79, 8.07, -1.06, 0.8)
+	pt3dadd(0.91, 8.41, -1.12, 0.8)
+	pt3dadd(1.1, 8.68, -1.22, 0.8)
+	pt3dadd(1.38, 8.84, -1.35, 0.8)
+  }
+  axon[6] {pt3dclear()
+	pt3dadd(0.85, 6.75, -1.03, 0.8)
+	pt3dadd(0.36, 7.14, -0.85, 0.8)
+	pt3dadd(0.03, 7.35, -0.72, 0.8)
+	pt3dadd(-0.26, 7.57, -0.65, 0.8)
+	pt3dadd(-0.54, 7.79, -0.65, 0.8)
+	pt3dadd(-0.71, 8.03, -0.69, 0.8)
+	pt3dadd(-0.8, 8.32, -0.72, 0.8)
+	pt3dadd(-0.85, 8.61, -0.76, 0.8)
+	pt3dadd(-0.89, 8.88, -0.83, 0.8)
+	pt3dadd(-0.82, 9.14, -0.89, 0.8)
+	pt3dadd(-0.64, 9.34, -0.94, 0.8)
+  }
+}
+proc basic_shape() {
+  shape3d_1()
+}
+
+objref all, axonal
+proc subsets() { local i
+  objref all, axonal
+  all = new SectionList()
+    for i=0, 6 axon[i] all.append()
+
+  axonal = new SectionList()
+    for i=0, 6 axon[i] axonal.append()
+
+}
+proc geom() {
+    forsec all { }
+}
+
+func lambda_f() { local i, x1, x2, d1, d2, lambda
+    if (n3d() < 2) {
+	return 1e5 * sqrt(diam / (4 * PI * $1 * Ra * cm))
+	}
+    x1 = arc3d(0)
+    d1 = diam3d(0)
+    lambda = 0
+
+    for i = 1, n3d() - 1 {
+	x2 = arc3d(i)
+	d2 = diam3d(i)
+	lambda += (x2 - x1) / sqrt(d1 + d2)
+	x1 = x2
+	d1 = d2
+	}
+
+    lambda *= sqrt(2) * 1e-5 * sqrt(4 * PI * $1 * Ra * cm)
+    return L / lambda
+}
+
+proc geom_nseg() {
+    forsec all {nseg = int((L/(0.1*lambda_f(100))+0.999)/2)*2 +1} 
+}
+proc biophys() {
+ forsec all {
+          Ra= 150
+          Cm= 0.5
+     }
+for i=0,6 axon[i]{
+	insert NaV11
+	insert NaV12
+	insert KV11
+	//insert KV12
+	insert KV13
+	insert Ca12L
+	insert HCN1
+	insert HCN2
+	insert NaKpump
+	//insert capump
+	//insert cdp
+	insert leak
+	insert rel
+	}
+
+}
+proc position() { local i
+    soma for i= 0, n3d()-1{
+	pt3dchange(i, x3d(i)+ $1-x, y3d(i)+$2-y, z3d(i)+$3-z, diam3d(i))
+	}
+    x=$1
+    y=$2
+    z=$3
+}
+
+proc synapses() {}
+access axon
+endtemplate Glu
